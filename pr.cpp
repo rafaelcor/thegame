@@ -506,58 +506,7 @@ void update(){
  }
  is_selected = selbuf;
 
- glColor4ub(255, 255, 255, 128); // Adelante
- glBindTexture(GL_TEXTURE_2D, 0);
- glBegin(GL_QUADS);
-  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
-  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
-  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
- glEnd();
-
- glColor4ub(255, 0, 0, 128); // Atras
- glBegin(GL_QUADS);
-  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
-  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
-  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
- glEnd();
-
- glColor4ub(0, 255, 0, 128); // Izquierda
- glBegin(GL_QUADS);
-  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
-  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
- glEnd();
-
- glColor4ub(0, 0, 255, 128); // Derecha
- glBegin(GL_QUADS);
-  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
-  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
-  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
-  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
- glEnd();
-
- glColor4ub(0, 0, 0, 128); // Abajo
- glBegin(GL_QUADS);
-  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
-  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
-  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
-  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
- glEnd();
-
- glColor4ub(0, 255, 255, 128); // Arriba
- glBegin(GL_QUADS);
-  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
-  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
-  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
- glEnd();
- glColor3ub(255, 255, 255);
-
  glEnable2D();
-
  glBindTexture(GL_TEXTURE_2D, puntero);
  glBegin(GL_QUADS);
   glTexCoord2f(0,0);
