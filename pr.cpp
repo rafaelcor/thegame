@@ -9,7 +9,7 @@
 #define WIN_W 500
 #define WIN_H 400
 
-float posz = -3, posx = 0, posy = -1.5;
+float posz = -3, posx = 0, posy = -1.5, movx = 0, movy = 0, movz = 0;
 Uint16 cubes[1000], minisel[8] = {1, 2, 3, 4, 5, 6, 7, 0}, miniactual = 0;
 Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
 bool is_selected = false, move = false, selbuf;
@@ -34,6 +34,37 @@ void farriba(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(0, 1);
    glVertex3f(x, y+1, z+1);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+    if(x > posx-0.4 and x < posx+2.4){
+     if(z > -posz-1.4 and z < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+    if(x+1 > posx-0.4 and x+1 < posx+2.4){
+     if(z > -posz-1.4 and z < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -50,6 +81,37 @@ void fabajo(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(1, 0);
    glVertex3f(x+1, y, z);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(y > -posy-0.5 and y < -posy+2.2){
+    if(x > posx-0.4 and x < posx+2.4){
+     if(z > -posz-1.4 and z < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+    if(x+1 > posx-0.4 and x+1 < posx+2.4){
+     if(z > -posz-1.4 and z < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -66,6 +128,37 @@ void fadelante(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(0, 1);
    glVertex3f(x, y, z+1);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+    if(x > posx-0.4 and x < posx+2.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+    if(x+1 > posx-0.4 and x+1 < posx+2.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -82,6 +175,37 @@ void fatras(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(0, 1);
    glVertex3f(x+1, y, z);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(z > -posz-1.4 and z < -posz+1.4){
+    if(x > posx-0.4 and x < posx+2.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+    if(x+1 > posx-0.4 and x+1 < posx+2.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -98,6 +222,37 @@ void fizquierda(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(0, 1);
    glVertex3f(x, y, z);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(x > posx-0.4 and x < posx+2.4){
+    if(z > -posz-1.4 and z < -posz+1.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+    if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      posx -= movx;
+      posy -= movy;
+      posz -= movz;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -117,7 +272,10 @@ void fderecha(int x, int y, int z, GLuint tex){
  }
 }
 
-void create_cube(int z, int x, int y, GLuint tarriba, GLuint tabajo, GLuint tcostado){
+void create_cube(int z, int x, int y){
+ GLuint tarriba = cubestex[(cubes[z+10*(x+10*y)]-1)*3+1];
+ GLuint tabajo = cubestex[(cubes[z+10*(x+10*y)]-1)*3];
+ GLuint tcostado = cubestex[(cubes[z+10*(x+10*y)]-1)*3+2];
  unsigned short z1, z2;
  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z1);
 
@@ -135,57 +293,6 @@ void create_cube(int z, int x, int y, GLuint tarriba, GLuint tabajo, GLuint tcos
 
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glColor3ub(255, 255, 255);
-
-   /*bool this_is = false;
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glColor3ub(255, 255, 255);
-
-   farriba(x, y, z, tarriba);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 0;
-    this_is = true; }
-
-   fabajo(x, y, z, tabajo);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 1;
-    this_is = true; }
-
-   fadelante(x, y, z, tcostado);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 2;
-    this_is = true; }
-
-   fatras(x, y, z, tcostado);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 3;
-    this_is = true; }
-
-   fizquierda(x, y, z, tcostado);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 4;
-    this_is = true; }
-
-   fderecha(x, y, z, tcostado);
-   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-   if(z1>z2){
-    z1 = z2;
-    selected_face = 5;
-    this_is = true; }
-
-   if(not this_is){ is_selected = false; }
-   return;
-  }
-  else{ is_selected = false; }*/
   }
  }
 
@@ -281,9 +388,9 @@ void glEnable2D(){
 
 void glDisable2D(){
  glMatrixMode(GL_PROJECTION);
- glPopMatrix();   
+ glPopMatrix();
  glMatrixMode(GL_MODELVIEW);
- glPopMatrix();	
+ glPopMatrix();
  glEnable(GL_DEPTH_TEST);
 }
 
@@ -358,18 +465,18 @@ void reshape(int width, int height){
 void update_z(Uint8 x, Uint8 y){
  for(int z = 0 ; z<10 and z<-posz ; z++){
   if(cubes[z+10*(x+10*y)]){
-   create_cube(z, x, y, cubestex[(cubes[z+10*(x+10*y)]-1)*3+1], cubestex[(cubes[z+10*(x+10*y)]-1)*3], cubestex[(cubes[z+10*(x+10*y)]-1)*3+2]);
+   create_cube(z, x, y);
   }
  }
  for(int z = 9 ; z>-posz and z>=0 ; z--){
   if(cubes[z+10*(x+10*y)]){
-   create_cube(z, x, y, cubestex[(cubes[z+10*(x+10*y)]-1)*3+1], cubestex[(cubes[z+10*(x+10*y)]-1)*3], cubestex[(cubes[z+10*(x+10*y)]-1)*3+2]);
+   create_cube(z, x, y);
   }
  }
  if((int)-posz>=0 and (int)-posz<10){
   int z = -posz;
   if(cubes[z+10*(x+10*y)]){
-   create_cube(z, x, y, cubestex[(cubes[z+10*(x+10*y)]-1)*3+1], cubestex[(cubes[z+10*(x+10*y)]-1)*3], cubestex[(cubes[z+10*(x+10*y)]-1)*3+2]);
+   create_cube(z, x, y);
   }
  }
 }
@@ -394,12 +501,63 @@ void update(){
  for(int x = 9 ; x>posx and x>-1 ; x--){
   update_y(x);
  }
- if(posx>=0 and (int)posx<10){
+ if((int)posx>=0 and (int)posx<10){
   update_y(posx);
  }
  is_selected = selbuf;
 
+ glColor4ub(255, 255, 255, 128); // Adelante
+ glBindTexture(GL_TEXTURE_2D, 0);
+ glBegin(GL_QUADS);
+  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
+  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
+  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
+ glEnd();
+
+ glColor4ub(255, 0, 0, 128); // Atras
+ glBegin(GL_QUADS);
+  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
+  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
+  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
+ glEnd();
+
+ glColor4ub(0, 255, 0, 128); // Izquierda
+ glBegin(GL_QUADS);
+  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
+  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
+ glEnd();
+
+ glColor4ub(0, 0, 255, 128); // Derecha
+ glBegin(GL_QUADS);
+  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
+  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
+  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
+  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
+ glEnd();
+
+ glColor4ub(0, 0, 0, 128); // Abajo
+ glBegin(GL_QUADS);
+  glVertex3f(posx+2.4, -posy-0.5, -posz-1.4);
+  glVertex3f(posx+2.4, -posy-0.5, -posz+1.4);
+  glVertex3f(posx-0.4, -posy-0.5, -posz+1.4);
+  glVertex3f(posx-0.4, -posy-0.5, -posz-1.4);
+ glEnd();
+
+ glColor4ub(0, 255, 255, 128); // Arriba
+ glBegin(GL_QUADS);
+  glVertex3f(posx+2.4, -posy+2.2, -posz-1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz-1.4);
+  glVertex3f(posx-0.4, -posy+2.2, -posz+1.4);
+  glVertex3f(posx+2.4, -posy+2.2, -posz+1.4);
+ glEnd();
+ glColor3ub(255, 255, 255);
+
  glEnable2D();
+
  glBindTexture(GL_TEXTURE_2D, puntero);
  glBegin(GL_QUADS);
   glTexCoord2f(0,0);
@@ -598,6 +756,9 @@ int main(){
    }
   }
 
+  movx = 0;
+  movy = 0;
+  movz = 0;
   keystate = SDL_GetKeyboardState(NULL);
    
   if(keystate[SDL_SCANCODE_RIGHT] or keystate[SDL_SCANCODE_D]){
@@ -613,23 +774,29 @@ int main(){
    sz -= 0.1*sin(rad);
   }
   if(keystate[SDL_SCANCODE_UP] or keystate[SDL_SCANCODE_W]){
-   posx += 0.1*sin(rad);
-   posz += 0.1*cos(rad);
+   movx = 0.1*sin(rad);
+   posx += movx;
+   movz = 0.1*cos(rad);
+   posz += movz;
    if(not SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
     angxz = 0;
    }
   }
   if(keystate[SDL_SCANCODE_DOWN] or keystate[SDL_SCANCODE_S]){
-   posx -= 0.1*sin(rad);
-   posz -= 0.1*cos(rad);
+   movx = -(0.1*sin(rad));
+   posx += movx;
+   movz = -(0.1*cos(rad));
+   posz += movz;
    if(not SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
     angxz = 0;
    }
   }
   if(keystate[SDL_SCANCODE_SPACE]){
+   movy = -0.15;
    posy -= 0.15;
   }
   if(keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT]){
+   movy = 0.15;
    posy += 0.15;  
   }
   if(keystate[SDL_SCANCODE_1]){
@@ -660,7 +827,6 @@ int main(){
   glLoadIdentity();
   glRotatef(angy, 0, 1, 0);
   glRotatef(angxz, cos(rad), 0, sin(rad));
-  //printf("%f %f %f\n", -posx, posy, posz);
   glTranslatef(-posx-1, posy-1, posz);
   glColor3ub(255, 255, 255);
   update();
