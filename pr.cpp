@@ -9,10 +9,10 @@
 #define WIN_W 500
 #define WIN_H 400
 
-float posz = -3, posx = 0, posy = -1.5, movx = 0, movy = 0, movz = 0;
+float posz = -3, posx = 0, posy = -1.5, movx = 0, movy = 0, movz = 0, caida = 0;
 Uint16 cubes[1000], minisel[8] = {1, 2, 3, 4, 5, 6, 7, 0}, miniactual = 0;
 Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
-bool is_selected = false, move = false, selbuf;
+bool is_selected = false, move = false, selbuf, colision, vuelo = false;
 int selected[3];
 SDL_Window *window;
 GLuint cubestex[26*3], puntero, mini[26], fboId;
@@ -41,26 +41,26 @@ void farriba(int x, int y, int z, GLuint tex){
    if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
     if(x > posx-0.4 and x < posx+2.4){
      if(z > -posz-1.4 and z < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
      if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
     }
     if(x+1 > posx-0.4 and x+1 < posx+2.4){
      if(z > -posz-1.4 and z < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
      if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
     }
    }
@@ -88,26 +88,26 @@ void fabajo(int x, int y, int z, GLuint tex){
    if(y > -posy-0.5 and y < -posy+2.2){
     if(x > posx-0.4 and x < posx+2.4){
      if(z > -posz-1.4 and z < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
      if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
     }
     if(x+1 > posx-0.4 and x+1 < posx+2.4){
      if(z > -posz-1.4 and z < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
      if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-      posx -= movx;
+      colision = true;
       posy -= movy;
-      posz -= movz;
+      movy = 0;
      }
     }
    }
@@ -135,26 +135,26 @@ void fadelante(int x, int y, int z, GLuint tex){
    if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
     if(x > posx-0.4 and x < posx+2.4){
      if(y > -posy-0.5 and y < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
     }
     if(x+1 > posx-0.4 and x+1 < posx+2.4){
      if(y > -posy-0.5 and y < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
     }
    }
@@ -182,26 +182,26 @@ void fatras(int x, int y, int z, GLuint tex){
    if(z > -posz-1.4 and z < -posz+1.4){
     if(x > posx-0.4 and x < posx+2.4){
      if(y > -posy-0.5 and y < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
     }
     if(x+1 > posx-0.4 and x+1 < posx+2.4){
      if(y > -posy-0.5 and y < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
-      posx -= movx;
-      posy -= movy;
+      colision = true;
       posz -= movz;
+      movz = 0;
      }
     }
    }
@@ -229,26 +229,26 @@ void fizquierda(int x, int y, int z, GLuint tex){
    if(x > posx-0.4 and x < posx+2.4){
     if(z > -posz-1.4 and z < -posz+1.4){
      if(y > -posy-0.5 and y < -posy+2.2){
+      colision = true;
       posx -= movx;
-      posy -= movy;
-      posz -= movz;
+      movx = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      colision = true;
       posx -= movx;
-      posy -= movy;
-      posz -= movz;
+      movx = 0;
      }
     }
     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
      if(y > -posy-0.5 and y < -posy+2.2){
+      colision = true;
       posx -= movx;
-      posy -= movy;
-      posz -= movz;
+      movx = 0;
      }
      if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      colision = true;
       posx -= movx;
-      posy -= movy;
-      posz -= movz;
+      movx = 0;
      }
     }
    }
@@ -269,6 +269,37 @@ void fderecha(int x, int y, int z, GLuint tex){
    if(tex) glTexCoord2f(0, 1);
    glVertex3f(x+1, y, z+1);
   glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if(x+1 > posx-0.4 and x+1 < posx+2.4){
+    if(z > -posz-1.4 and z < -posz+1.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+    if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if(y > -posy-0.5 and y < -posy+2.2){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+   }
+  }
  }
 }
 
@@ -659,6 +690,7 @@ int main(){
  const Uint8 *keystate;
 
  loop:
+  colision = false;
   SDL_PumpEvents();
   while(SDL_PollEvent(&event)){
    if(event.type == SDL_QUIT){
@@ -740,11 +772,13 @@ int main(){
     angxz = 0;
    }
   }
-  if(keystate[SDL_SCANCODE_SPACE]){
-   movy = -0.15;
-   posy -= 0.15;
+  if(keystate[SDL_SCANCODE_SPACE] and !caida){
+   caida = -0.5;
   }
-  if(keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT]){
+  else if(keystate[SDL_SCANCODE_SPACE] and caida){
+   vuelo = true;
+  }
+  if((keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT]) and vuelo){
    movy = 0.15;
    posy += 0.15;  
   }
@@ -772,6 +806,10 @@ int main(){
   if(keystate[SDL_SCANCODE_8]){
    miniactual = 7;
   }
+  caida += 0.05;
+  movy += caida;
+  posy += caida;
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
   glRotatef(angy, 0, 1, 0);
@@ -779,6 +817,17 @@ int main(){
   glTranslatef(-posx-1, posy-1, posz);
   glColor3ub(255, 255, 255);
   update();
+  if(!movy){ caida = 0; }
+
+  if(colision){
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glLoadIdentity();
+   glRotatef(angy, 0, 1, 0);
+   glRotatef(angxz, cos(rad), 0, sin(rad));
+   glTranslatef(-posx-1, posy-1, posz);
+   glColor3ub(255, 255, 255);
+   update();
+  }
 
   SDL_GL_SwapWindow(window);
   SDL_RenderPresent(sdlRenderer);
