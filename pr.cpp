@@ -8,11 +8,12 @@
 #define PI 3.1415927
 #define WIN_W 500
 #define WIN_H 400
+#define CUBE_SIZE 3
 
-float posz = -3, posx = 0, posy = -1.5, movx = 0, movy = 0, movz = 0, caida = 0;
+float posz = -6, posx = 0, posy = -6, movx = 0, movy = 0, movz = 0, caida = 0;
 Uint16 cubes[1000], minisel[8] = {1, 2, 3, 4, 5, 6, 7, 0}, miniactual = 0;
 Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
-bool is_selected = false, move = false, selbuf, colision, vuelo = false;
+bool is_selected = false, move = false, selbuf, colision;
 int selected[3];
 SDL_Window *window;
 GLuint cubestex[26*3], puntero, mini[26], fboId;
@@ -26,41 +27,45 @@ void farriba(int x, int y, int z, GLuint tex){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Arriba
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x, y+1, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x+1, y+1, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x+1, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
-    if(x > posx-0.4 and x < posx+2.4){
-     if(z > -posz-1.4 and z < -posz+1.4){
+   if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+    if((CUBE_SIZE*x > posx-0.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
-     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
     }
-    if(x+1 > posx-0.4 and x+1 < posx+2.4){
-     if(z > -posz-1.4 and z < -posz+1.4){
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-0.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
-     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
     }
    }
@@ -69,45 +74,49 @@ void farriba(int x, int y, int z, GLuint tex){
 }
 
 void fabajo(int x, int y, int z, GLuint tex){
- if(y == 0 or not cubes[z+10*(x+10*(y-1))]){
+ if(y and not cubes[z+10*(x+10*(y-1))]){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Abajo
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x, y, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x, y, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x+1, y, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x+1, y, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(y > -posy-0.5 and y < -posy+2.2){
-    if(x > posx-0.4 and x < posx+2.4){
-     if(z > -posz-1.4 and z < -posz+1.4){
+   if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+    if((CUBE_SIZE*x > posx-0.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
-     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
     }
-    if(x+1 > posx-0.4 and x+1 < posx+2.4){
-     if(z > -posz-1.4 and z < -posz+1.4){
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-0.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
-     if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
       posy -= movy;
       movy = 0;
+      caida = 0;
      }
     }
    }
@@ -120,38 +129,38 @@ void fadelante(int x, int y, int z, GLuint tex){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Adelante
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x+1, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x+1, y, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x, y, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-    if(x > posx-0.4 and x < posx+2.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+   if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+    if((CUBE_SIZE*x > posx-0.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
     }
-    if(x+1 > posx-0.4 and x+1 < posx+2.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-0.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
@@ -167,38 +176,38 @@ void fatras(int x, int y, int z, GLuint tex){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Atras
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x+1, y+1, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x, y+1, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x, y, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x+1, y, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(z > -posz-1.4 and z < -posz+1.4){
-    if(x > posx-0.4 and x < posx+2.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+   if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+    if((CUBE_SIZE*x > posx-0.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
     }
-    if(x+1 > posx-0.4 and x+1 < posx+2.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-0.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posz -= movz;
       movz = 0;
@@ -214,38 +223,38 @@ void fizquierda(int x, int y, int z, GLuint tex){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Izquierda
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x, y+1, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x, y, z+1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x, y, z);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(x > posx-0.4 and x < posx+2.4){
-    if(z > -posz-1.4 and z < -posz+1.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+   if((CUBE_SIZE*x > posx-0.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
     }
-    if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
@@ -261,38 +270,38 @@ void fderecha(int x, int y, int z, GLuint tex){
   glBindTexture(GL_TEXTURE_2D, tex);
   glBegin(GL_QUADS); // Derecha
    if(tex) glTexCoord2f(0, 0);
-   glVertex3f(x+1, y+1, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
    if(tex) glTexCoord2f(1, 0);
-   glVertex3f(x+1, y+1, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
    if(tex) glTexCoord2f(1, 1);
-   glVertex3f(x+1, y, z);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
    if(tex) glTexCoord2f(0, 1);
-   glVertex3f(x+1, y, z+1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
   glEnd();
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if(x+1 > posx-0.4 and x+1 < posx+2.4){
-    if(z > -posz-1.4 and z < -posz+1.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+   if((CUBE_SIZE*x+CUBE_SIZE > posx-0.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-0.4 and CUBE_SIZE*x+CUBE_SIZE > posx-0.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
     }
-    if(z+1 > -posz-1.4 and z+1 < -posz+1.4){
-     if(y > -posy-0.5 and y < -posy+2.2){
+    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if(y+1 > -posy-0.5 and y+1 < -posy+2.2){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
       colision = true;
       posx -= movx;
       movx = 0;
@@ -311,7 +320,7 @@ void create_cube(int z, int x, int y){
  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z1);
 
  if(is_selected and selected[0] == z and selected[1] == x and selected[2] == y){
-  if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
    glBindTexture(GL_TEXTURE_2D, 0);
    glColor3ub(0, 0, 0);
@@ -328,7 +337,7 @@ void create_cube(int z, int x, int y){
  }
 
  farriba(x, y, z, tarriba);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -340,7 +349,7 @@ void create_cube(int z, int x, int y){
  }
 
  fabajo(x, y, z, tabajo);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -352,7 +361,7 @@ void create_cube(int z, int x, int y){
  }
 
  fadelante(x, y, z, tcostado);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -364,7 +373,7 @@ void create_cube(int z, int x, int y){
  }
 
  fatras(x, y, z, tcostado);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -376,7 +385,7 @@ void create_cube(int z, int x, int y){
  }
 
  fizquierda(x, y, z, tcostado);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -388,7 +397,7 @@ void create_cube(int z, int x, int y){
  }
 
  fderecha(x, y, z, tcostado);
- if(z >= -posz-6 and z <= -posz+6 and x >= posx-6 and x <= posx+6 and y >= -posy-6 and y <= -posy+6){
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
@@ -494,18 +503,18 @@ void reshape(int width, int height){
 }
 
 void update_z(Uint8 x, Uint8 y){
- for(int z = 0 ; z<10 and z<-posz ; z++){
+ for(int z = 0 ; z<10 and z<-posz/CUBE_SIZE ; z++){
   if(cubes[z+10*(x+10*y)]){
    create_cube(z, x, y);
   }
  }
- for(int z = 9 ; z>-posz and z>=0 ; z--){
+ for(int z = 9 ; z>-posz/CUBE_SIZE and z>=0 ; z--){
   if(cubes[z+10*(x+10*y)]){
    create_cube(z, x, y);
   }
  }
- if((int)-posz>=0 and (int)-posz<10){
-  int z = -posz;
+ if((int)-posz/CUBE_SIZE>=0 and (int)-posz/CUBE_SIZE<10){
+  int z = -posz/CUBE_SIZE;
   if(cubes[z+10*(x+10*y)]){
    create_cube(z, x, y);
   }
@@ -513,27 +522,27 @@ void update_z(Uint8 x, Uint8 y){
 }
 
 void update_y(Uint8 x){
- for(int y = 0 ; y<10 and y<-posy ; y++){
+ for(int y = 0 ; y<10 and y<-posy/CUBE_SIZE ; y++){
   update_z(x, y);
  }
- for(int y = 9 ; y>-posy and y>=0 ; y--){
+ for(int y = 9 ; y>-posy/CUBE_SIZE and y>=0 ; y--){
   update_z(x, y);
  }
- if((int)-posy>=0 and (int)-posy<10){
-  update_z(x, -posy);
+ if((int)-posy/CUBE_SIZE>=0 and (int)-posy/CUBE_SIZE<10){
+  update_z(x, -posy/CUBE_SIZE);
  }
 }
 
 void update(){
  selbuf = false;
- for(int x = 0 ; x<10 and x<posx ; x++){
+ for(int x = 0 ; x<10 and x<posx/CUBE_SIZE ; x++){
   update_y(x);
  }
- for(int x = 9 ; x>posx and x>-1 ; x--){
+ for(int x = 9 ; x>posx/CUBE_SIZE and x>-1 ; x--){
   update_y(x);
  }
- if((int)posx>=0 and (int)posx<10){
-  update_y(posx);
+ if((int)posx/CUBE_SIZE>=0 and (int)posx/CUBE_SIZE<10){
+  update_y(posx/CUBE_SIZE);
  }
  is_selected = selbuf;
 
@@ -756,8 +765,10 @@ int main(){
   }
   if(keystate[SDL_SCANCODE_UP] or keystate[SDL_SCANCODE_W]){
    movx = 0.1*sin(rad);
+   movx *= CUBE_SIZE;
    posx += movx;
    movz = 0.1*cos(rad);
+   movz *= CUBE_SIZE;
    posz += movz;
    if(not SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
     angxz = 0;
@@ -765,20 +776,19 @@ int main(){
   }
   if(keystate[SDL_SCANCODE_DOWN] or keystate[SDL_SCANCODE_S]){
    movx = -(0.1*sin(rad));
+   movx *= CUBE_SIZE;
    posx += movx;
    movz = -(0.1*cos(rad));
+   movz *= CUBE_SIZE;
    posz += movz;
    if(not SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
     angxz = 0;
    }
   }
   if(keystate[SDL_SCANCODE_SPACE] and !caida){
-   caida = -0.5;
+   caida = CUBE_SIZE*-0.5;
   }
-  else if(keystate[SDL_SCANCODE_SPACE] and caida){
-   vuelo = true;
-  }
-  if((keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT]) and vuelo){
+  if((keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT])){
    movy = 0.15;
    posy += 0.15;  
   }
@@ -806,7 +816,7 @@ int main(){
   if(keystate[SDL_SCANCODE_8]){
    miniactual = 7;
   }
-  caida += 0.05;
+  caida += CUBE_SIZE*0.05;
   movy += caida;
   posy += caida;
 
@@ -814,17 +824,16 @@ int main(){
   glLoadIdentity();
   glRotatef(angy, 0, 1, 0);
   glRotatef(angxz, cos(rad), 0, sin(rad));
-  glTranslatef(-posx-1, posy-1, posz);
+  glTranslatef(-posx-CUBE_SIZE, posy-CUBE_SIZE, posz);
   glColor3ub(255, 255, 255);
   update();
-  if(!movy){ caida = 0; }
 
   if(colision){
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLoadIdentity();
    glRotatef(angy, 0, 1, 0);
    glRotatef(angxz, cos(rad), 0, sin(rad));
-   glTranslatef(-posx-1, posy-1, posz);
+   glTranslatef(-posx-CUBE_SIZE, posy-CUBE_SIZE, posz);
    glColor3ub(255, 255, 255);
    update();
   }
