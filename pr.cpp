@@ -39,7 +39,8 @@ void farriba(int x, int y, int z, GLuint tex){
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+   if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+CUBE_SIZE-0.5
+) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
      if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
@@ -90,7 +91,7 @@ void fabajo(int x, int y, int z, GLuint tex){
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
   if(pr[1] == GL_FILL){
-   if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*(y-1) < -posy-0.5 and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*(y-1) < -posy+2.2 and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy+2.2)){
+   if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*(y-1) < -posy-0.5 and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*(y-1) < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
      if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
       colision = true;
@@ -143,24 +144,24 @@ void fadelante(int x, int y, int z, GLuint tex){
   if(pr[1] == GL_FILL){
    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
     }
     if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
@@ -190,24 +191,24 @@ void fatras(int x, int y, int z, GLuint tex){
   if(pr[1] == GL_FILL){
    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
     }
     if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posz -= movz;
       movz = 0;
@@ -237,24 +238,24 @@ void fizquierda(int x, int y, int z, GLuint tex){
   if(pr[1] == GL_FILL){
    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
     }
     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
@@ -284,24 +285,24 @@ void fderecha(int x, int y, int z, GLuint tex){
   if(pr[1] == GL_FILL){
    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
     }
     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
-     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
      }
-     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+2.2) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+2.2 and CUBE_SIZE*y+CUBE_SIZE > -posy+2.2)){
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
       colision = true;
       posx -= movx;
       movx = 0;
@@ -837,7 +838,7 @@ int main(){
   glLoadIdentity();
   glRotatef(angy, 0, 1, 0);
   glRotatef(angxz, cos(rad), 0, sin(rad));
-  glTranslatef(-posx, posy-CUBE_SIZE, posz);
+  glTranslatef(-posx, posy-(CUBE_SIZE+CUBE_SIZE/2.0), posz);
   glColor3ub(255, 255, 255);
   update();
 
@@ -846,7 +847,7 @@ int main(){
    glLoadIdentity();
    glRotatef(angy, 0, 1, 0);
    glRotatef(angxz, cos(rad), 0, sin(rad));
-   glTranslatef(-posx, posy-CUBE_SIZE, posz);
+   glTranslatef(-posx, posy-(CUBE_SIZE+CUBE_SIZE/2.0), posz);
    glColor3ub(255, 255, 255);
    update();
   }
