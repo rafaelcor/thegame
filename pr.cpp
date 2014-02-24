@@ -11,8 +11,9 @@
 #define CUBE_SIZE 7
 
 float posz = -10, posx = 0, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;
-Uint16 cubes[1000], minisel[8] = {1, 2, 3, 4, 5, 6, 7, 0}, miniactual = 0;
+Uint16 cubes[1000], id_inv[8] = {1, 2, 3, 4, 5, 6, 26, 0}, miniactual = 0;
 Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
+Uint8 inv[8] = {1, 2, 4, 8, 16, 32, 64, 0};
 bool is_selected = false, move = false, selbuf, colision;
 int selected[3];
 SDL_Window *window;
@@ -402,7 +403,7 @@ void create_cube(int z, int x, int y){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
    z1 = z2;
-   selected_face = 4;
+   selected_face = 5;
    selected[0] = z;
    selected[1] = x;
    selected[2] = y;
@@ -581,9 +582,9 @@ void update(){
    glEnd();
   }
 
-  if(minisel[x]){
+  if(id_inv[x]){
    glColor4ub(255, 255, 255, 255);
-   glBindTexture(GL_TEXTURE_2D, mini[minisel[x]-1]);
+   glBindTexture(GL_TEXTURE_2D, mini[id_inv[x]-1]);
    glBegin(GL_QUADS);
     glTexCoord2f(0,1);
     glVertex2f(WIN_W/2-38*4+38*x, WIN_H-3);
@@ -715,30 +716,34 @@ int main(){
     sz += (event.motion.xrel/((float) 100))*sin(rad); }
    if(event.type == SDL_MOUSEBUTTONUP){
     if(not move and is_selected){
-     if(event.button.button == SDL_BUTTON_RIGHT){
+     if(event.button.button == SDL_BUTTON_RIGHT and (!id_inv[miniactual] or (id_inv[miniactual] == cubes[selected[0]+10*(selected[1]+10*selected[2])] and inv[miniactual] < 64))){
+      id_inv[miniactual] = cubes[selected[0]+10*(selected[1]+10*selected[2])];
+      inv[miniactual]++;
       cubes[selected[0]+10*(selected[1]+10*selected[2])] = 0;
      }
-     if(event.button.button == SDL_BUTTON_LEFT and minisel[miniactual]){
+     if(event.button.button == SDL_BUTTON_LEFT and id_inv[miniactual]){
       switch(selected_face){
        case 0: // Arriba
-        cubes[selected[0]+10*(selected[1]+10*(selected[2]+1))] = minisel[miniactual];
+        cubes[selected[0]+10*(selected[1]+10*(selected[2]+1))] = id_inv[miniactual];
         break;
        case 1: // Abajo
-        cubes[selected[0]+10*(selected[1]+10*(selected[2]-1))] = minisel[miniactual];
+        cubes[selected[0]+10*(selected[1]+10*(selected[2]-1))] = id_inv[miniactual];
         break;
        case 2: // Adelante
-        cubes[(selected[0]+1)+10*(selected[1]+10*selected[2])] = minisel[miniactual];
+        cubes[(selected[0]+1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
         break;
        case 3: // Atras
-        cubes[(selected[0]-1)+10*(selected[1]+10*selected[2])] = minisel[miniactual];
+        cubes[(selected[0]-1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
         break;
        case 4: // Izquierda
-        cubes[selected[0]+10*((selected[1]-1)+10*selected[2])] = minisel[miniactual];
+        cubes[selected[0]+10*((selected[1]-1)+10*selected[2])] = id_inv[miniactual];
         break;
        case 5: // Derecha
-        cubes[selected[0]+10*((selected[1]+1)+10*selected[2])] = minisel[miniactual];
+        cubes[selected[0]+10*((selected[1]+1)+10*selected[2])] = id_inv[miniactual];
         break;
       }
+      inv[miniactual]--;
+      if(!inv[miniactual]){ id_inv[miniactual] = 0; }
      }
     }
     else if(move){
