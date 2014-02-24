@@ -16,7 +16,7 @@ Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
 bool is_selected = false, move = false, selbuf, colision;
 int selected[3];
 SDL_Window *window;
-GLuint cubestex[26*3], puntero, mini[26], fboId;
+GLuint cubestex[26*3], puntero, mini[26], fboId, fondo;
 
 void exit(){
  SDL_Quit();
@@ -313,9 +313,12 @@ void fderecha(int x, int y, int z, GLuint tex){
 }
 
 void create_cube(int z, int x, int y){
- GLuint tarriba = cubestex[(cubes[z+10*(x+10*y)]-1)*3+1];
- GLuint tabajo = cubestex[(cubes[z+10*(x+10*y)]-1)*3];
- GLuint tcostado = cubestex[(cubes[z+10*(x+10*y)]-1)*3+2];
+  GLuint tarriba, tabajo, tcostado;
+ if(y != -1){
+  tarriba = cubestex[(cubes[z+10*(x+10*y)]-1)*3+1];
+  tabajo = cubestex[(cubes[z+10*(x+10*y)]-1)*3];
+  tcostado = cubestex[(cubes[z+10*(x+10*y)]-1)*3+2];
+ }
  unsigned short z1, z2;
  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z1);
 
@@ -325,18 +328,20 @@ void create_cube(int z, int x, int y){
    glBindTexture(GL_TEXTURE_2D, 0);
    glColor3ub(0, 0, 0);
    farriba(x, y, z, 0);
-   fabajo(x, y, z, 0);
-   fadelante(x, y, z, 0);
-   fatras(x, y, z, 0);
-   fizquierda(x, y, z, 0);
-   fderecha(x, y, z, 0);
-
+   if(y != -1){
+    fabajo(x, y, z, 0);
+    fadelante(x, y, z, 0);
+    fatras(x, y, z, 0);
+    fizquierda(x, y, z, 0);
+    fderecha(x, y, z, 0);
+   }
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glColor3ub(255, 255, 255);
   }
  }
 
- farriba(x, y, z, tarriba);
+ if(y == -1){ farriba(x, y, z, fondo); }
+ else{ farriba(x, y, z, tarriba); }
  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
   if(z1>z2){
@@ -348,64 +353,66 @@ void create_cube(int z, int x, int y){
    selbuf = true; }
  }
 
- fabajo(x, y, z, tabajo);
- if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-  if(z1>z2){
-   z1 = z2;
-   selected_face = 1;
-   selected[0] = z;
-   selected[1] = x;
-   selected[2] = y;
-   selbuf = true; }
- }
+ if(y != -1){
+  fabajo(x, y, z, tabajo);
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+   if(z1>z2){
+    z1 = z2;
+    selected_face = 1;
+    selected[0] = z;
+    selected[1] = x;
+    selected[2] = y;
+    selbuf = true; }
+  }
 
- fadelante(x, y, z, tcostado);
- if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-  if(z1>z2){
-   z1 = z2;
-   selected_face = 2;
-   selected[0] = z;
-   selected[1] = x;
-   selected[2] = y;
-   selbuf = true; }
- }
+  fadelante(x, y, z, tcostado);
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+   if(z1>z2){
+    z1 = z2;
+    selected_face = 2;
+    selected[0] = z;
+    selected[1] = x;
+    selected[2] = y;
+    selbuf = true; }
+  }
 
- fatras(x, y, z, tcostado);
- if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-  if(z1>z2){
-   z1 = z2;
-   selected_face = 3;
-   selected[0] = z;
-   selected[1] = x;
-   selected[2] = y;
-   selbuf = true; }
- }
+  fatras(x, y, z, tcostado);
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+   if(z1>z2){
+    z1 = z2;
+    selected_face = 3;
+    selected[0] = z;
+    selected[1] = x;
+    selected[2] = y;
+    selbuf = true; }
+  }
 
- fizquierda(x, y, z, tcostado);
- if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-  if(z1>z2){
-   z1 = z2;
-   selected_face = 4;
-   selected[0] = z;
-   selected[1] = x;
-   selected[2] = y;
-   selbuf = true; }
- }
+  fizquierda(x, y, z, tcostado);
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+   if(z1>z2){
+    z1 = z2;
+    selected_face = 4;
+    selected[0] = z;
+    selected[1] = x;
+    selected[2] = y;
+    selbuf = true; }
+  }
 
- fderecha(x, y, z, tcostado);
- if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
-  if(z1>z2){
-   z1 = z2;
-   selected_face = 4;
-   selected[0] = z;
-   selected[1] = x;
-   selected[2] = y;
-   selbuf = true; }
+  fderecha(x, y, z, tcostado);
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+   if(z1>z2){
+    z1 = z2;
+    selected_face = 4;
+    selected[0] = z;
+    selected[1] = x;
+    selected[2] = y;
+    selbuf = true; }
+  }
  }
 }
 
@@ -535,6 +542,11 @@ void update_y(Uint8 x){
 
 void update(){
  selbuf = false;
+ for(int x = 0 ; x<10 ; x++){
+  for(int y = 0 ; y<10 ; y++){
+   create_cube(y, x, -1);
+  }
+ }
  for(int x = 0 ; x<10 and x<(int)posx/CUBE_SIZE ; x++){
   update_y(x);
  }
@@ -626,6 +638,7 @@ void init(){
  }
 
  puntero = load_tex("Puntero.png");
+ fondo = load_tex("Fondo.png");
 
  glGenTextures(26, mini);
  for(unsigned short x=0; x<26; x++){
