@@ -10,6 +10,7 @@
 #define WIN_W 500
 #define WIN_H 400
 #define CUBE_SIZE 7
+#define GRAVEDAD 0.05
 
 float posz = -10, posx = 0, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;
 Uint16 cubes[1000], id_inv[8] = {1, 2, 3, 4, 5, 6, 26, 0}, miniactual = 0;
@@ -918,7 +919,7 @@ int main(){
   if(keystate[SDL_SCANCODE_8]){
    miniactual = 7;
   }
-  caida += CUBE_SIZE*0.05;
+  caida += CUBE_SIZE*GRAVEDAD;
   movy += caida;
   posy += caida;
 
