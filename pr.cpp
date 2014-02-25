@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
@@ -17,9 +18,12 @@ Uint8 inv[8] = {1, 2, 4, 8, 16, 32, 64, 0};
 bool is_selected = false, move = false, selbuf, colision;
 int selected[3];
 SDL_Window *window;
-GLuint cubestex[26*3], puntero, mini[26], fboId;
+GLuint cubestex[26*3], puntero, mini[26], fboId, nums[10], nums_r[10];
+TTF_Font *minifont;
 
-void exit(){
+void inexit(){
+ TTF_CloseFont(minifont);
+ TTF_Quit();
  SDL_Quit();
 }
 
@@ -444,7 +448,6 @@ void create_mini(GLuint tarriba, GLuint tabajo, GLuint tcostado){
  glRotatef(45, 0, 1, 0);
 
  glColor3ub(255, 255, 255);
-
  glBindTexture(GL_TEXTURE_2D, tarriba); // Arriba
  glBegin(GL_QUADS);
   glTexCoord2f(0, 0);
@@ -455,17 +458,6 @@ void create_mini(GLuint tarriba, GLuint tabajo, GLuint tcostado){
   glVertex3f(0.9, 0.9, 0.9);
   glTexCoord2f(0, 1);
   glVertex3f(-0.9, 0.9, 0.9);
- glEnd();
- glBindTexture(GL_TEXTURE_2D, tcostado); // Adelante
- glBegin(GL_QUADS);
-  glTexCoord2f(0, 0);
-  glVertex3f(-0.9, 0.9, 0.9);
-  glTexCoord2f(1, 0);
-  glVertex3f(0.9, 0.9, 0.9);
-  glTexCoord2f(1, 1);
-  glVertex3f(0.9, -0.9, 0.9);
-  glTexCoord2f(0, 1);
-  glVertex3f(-0.9, -0.9, 0.9);
  glEnd();
  glBindTexture(GL_TEXTURE_2D, tcostado); // Izquierda
  glBegin(GL_QUADS);
@@ -478,10 +470,24 @@ void create_mini(GLuint tarriba, GLuint tabajo, GLuint tcostado){
   glTexCoord2f(0, 1);
   glVertex3f(-0.9, -0.9, -0.9);
  glEnd();
+ glColor3ub(200, 200, 200);
+ glBindTexture(GL_TEXTURE_2D, tcostado); // Adelante
+ glBegin(GL_QUADS);
+  glTexCoord2f(0, 0);
+  glVertex3f(-0.9, 0.9, 0.9);
+  glTexCoord2f(1, 0);
+  glVertex3f(0.9, 0.9, 0.9);
+  glTexCoord2f(1, 1);
+  glVertex3f(0.9, -0.9, 0.9);
+  glTexCoord2f(0, 1);
+  glVertex3f(-0.9, -0.9, 0.9);
+ glEnd();
 }
 
-GLuint load_tex(const char *name){
- SDL_Surface *surface = IMG_Load(name);
+GLuint load_tex(const char *name, SDL_Surface *usurface){
+ SDL_Surface *surface;
+ if(usurface){ surface = usurface; }
+ else{ surface = IMG_Load(name); }
  GLuint tex = 0;
  glGenTextures(1, &tex);
  glBindTexture(GL_TEXTURE_2D, tex);
@@ -564,7 +570,7 @@ void update(){
  for(Uint8 x=0 ; x<8 ; x++){
   glBindTexture(GL_TEXTURE_2D, 0);
   if(miniactual == x){
-   glColor4ub(255, 255, 255, 200);
+   glColor4ub(100, 100, 100, 200);
    glBegin(GL_QUADS);
     glVertex2f(WIN_W/2-38*4+38*x, WIN_H-3);
     glVertex2f(WIN_W/2-38*4+38*x+36, WIN_H-3);
@@ -595,6 +601,58 @@ void update(){
     glTexCoord2f(0,0);
     glVertex2f(WIN_W/2-38*4+38*x, WIN_H-39);
    glEnd();
+   if(inv[x]/100){
+    if(inv[x] < 64){ glBindTexture(GL_TEXTURE_2D, nums[inv[x]/100]); }
+    else{ glBindTexture(GL_TEXTURE_2D, nums_r[inv[x]/100]); }
+    glBegin(GL_QUADS);
+     glTexCoord2f(0,0);
+     glVertex2f(WIN_W/2-38*4+38*x+9, WIN_H-20);
+     glTexCoord2f(1,0);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-20);
+     glTexCoord2f(1,1);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-39);
+     glTexCoord2f(0,1);
+     glVertex2f(WIN_W/2-38*4+38*x+9, WIN_H-39);
+    glEnd();
+    if(inv[x] < 64){ glBindTexture(GL_TEXTURE_2D, nums[(inv[x]/10)%10]); }
+    else{ glBindTexture(GL_TEXTURE_2D, nums_r[(inv[x]/10)%10]); }
+    glBegin(GL_QUADS);
+     glTexCoord2f(0,0);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-20);
+     glTexCoord2f(1,0);
+     glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-20);
+     glTexCoord2f(1,1);
+     glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-39);
+     glTexCoord2f(0,1);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-39);
+    glEnd();
+   }
+   else if((inv[x]/10)%10){
+    if(inv[x] < 64){ glBindTexture(GL_TEXTURE_2D, nums[(inv[x]/10)%10]); }
+    else{ glBindTexture(GL_TEXTURE_2D, nums_r[(inv[x]/10)%10]); }
+    glBegin(GL_QUADS);
+     glTexCoord2f(0,0);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-20);
+     glTexCoord2f(1,0);
+     glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-20);
+     glTexCoord2f(1,1);
+     glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-39);
+     glTexCoord2f(0,1);
+     glVertex2f(WIN_W/2-38*4+38*x+18, WIN_H-39);
+    glEnd();
+   }
+   if(inv[x] < 64){ glBindTexture(GL_TEXTURE_2D, nums[inv[x]%10]); }
+   else{ glBindTexture(GL_TEXTURE_2D, nums_r[inv[x]%10]); }
+   glBegin(GL_QUADS);
+    glTexCoord2f(0,0);
+    glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-20);
+    glTexCoord2f(1,0);
+    glVertex2f(WIN_W/2-38*4+38*x+36, WIN_H-20);
+    glTexCoord2f(1,1);
+    glVertex2f(WIN_W/2-38*4+38*x+36, WIN_H-39);
+    glTexCoord2f(0,1);
+    glVertex2f(WIN_W/2-38*4+38*x+27, WIN_H-39);
+   glEnd();
   }
  }
 
@@ -603,7 +661,7 @@ void update(){
 }
  
 void init(){
- glClearColor(1, 0, 1, 0);
+ glClearColor(0.3, 0.7, 0.9, 0);
  
  glEnable(GL_DEPTH_TEST);
  glEnable(GL_DEPTH);
@@ -620,14 +678,44 @@ void init(){
  char buff[17];
  for(unsigned short x=1; x<27; x++){
   snprintf(buff, 17, "Cubos/%da.png", x);
-  cubestex[(x-1)*3] = load_tex(buff);
+  cubestex[(x-1)*3] = load_tex(buff, NULL);
   snprintf(buff, 17, "Cubos/%db.png", x);
-  cubestex[(x-1)*3+1] = load_tex(buff);
+  cubestex[(x-1)*3+1] = load_tex(buff, NULL);
   snprintf(buff, 17, "Cubos/%dc.png", x);
-  cubestex[(x-1)*3+2] = load_tex(buff);
+  cubestex[(x-1)*3+2] = load_tex(buff, NULL);
  }
 
- puntero = load_tex("Puntero.png");
+ puntero = load_tex("Puntero.png", NULL);
+
+ minifont = TTF_OpenFont("FreeSerif.ttf", 16);
+ if(!minifont){
+  fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
+  exit(1);
+ }
+
+ SDL_Surface *text_surface;
+ SDL_Color white = {255, 255, 255}, red = {0, 0, 255};
+
+ for(short i = 0 ; i<10 ; i++){
+  char num[2] = {'0', 0};
+  num[0] += i;
+  text_surface = TTF_RenderUTF8_Blended(minifont, num, white);
+  if(!minifont){
+   fprintf(stderr, "TTF_RenderUTF8 %d: %s\n", i, TTF_GetError());
+   exit(1);
+  }
+  nums[i] = load_tex("", text_surface);
+ }
+ for(short i = 0 ; i<10 ; i++){
+  char num[2] = {'0', 0};
+  num[0] += i;
+  text_surface = TTF_RenderUTF8_Blended(minifont, num, red);
+  if(!minifont){
+   fprintf(stderr, "TTF_RenderUTF8 %d: %s\n", i, TTF_GetError());
+   exit(1);
+  }
+  nums_r[i] = load_tex("", text_surface);
+ }
 
  glGenTextures(26, mini);
  for(unsigned short x=0; x<26; x++){
@@ -649,10 +737,12 @@ void init(){
 
  reshape(36, 36);
 
+ glDisable(GL_BLEND);
  for(unsigned short x=0; x<26; x++){
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mini[x], 0);
   create_mini(cubestex[(x*3)+1], cubestex[x*3], cubestex[(x*3)+2]);
  }
+ glEnable(GL_BLEND);
  glBindFramebuffer(GL_FRAMEBUFFER, 0);
  glDeleteFramebuffers(1, &fboId);
 
@@ -678,6 +768,12 @@ int main(){
   return 1;
  }
 
+ atexit(inexit);
+
+ if(TTF_Init() == -1) {
+  fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
+  exit(1);
+ }
 
  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
