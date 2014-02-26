@@ -11,7 +11,7 @@
 #define WIN_H 400
 #define CUBE_SIZE 7
 #define GRAVEDAD 0.05
-
+#define FLY 1
 
 float posz = -10, posx = 0, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;
 Uint16 cubes[1000], id_inv[8] = {1, 2, 3, 4, 5, 6, 26, 0}, miniactual = 0;
@@ -22,7 +22,6 @@ int selected[3];
 SDL_Window *window;
 GLuint cubestex[26*3], puntero, mini[26], fboId, nums[10], nums_r[10];
 TTF_Font *minifont;
-int fly = 1;
 
 void inexit(){
  TTF_CloseFont(minifont);
@@ -869,9 +868,9 @@ int main(){
    sz -= 0.1*sin(rad);
   }
   if(keystate[SDL_SCANCODE_UP] or keystate[SDL_SCANCODE_W]){
-   movx = 0.1*sin(rad);
+   movx = 0.1*sin(rad)*2;
    movx *= CUBE_SIZE;
-   posx += movx*2;
+   posx += movx;
    movz = 0.1*cos(rad);
    movz *= CUBE_SIZE;
    posz += movz;
@@ -880,9 +879,9 @@ int main(){
    }
   }
   if(keystate[SDL_SCANCODE_DOWN] or keystate[SDL_SCANCODE_S]){
-   movx = -(0.1*sin(rad));
+   movx = -(0.1*sin(rad)*2);
    movx *= CUBE_SIZE;
-   posx += movx*2;
+   posx += movx;
    movz = -(0.1*cos(rad));
    movz *= CUBE_SIZE;
    posz += movz;
@@ -894,7 +893,7 @@ int main(){
    caida = CUBE_SIZE*-0.5;
   }
   if((keystate[SDL_SCANCODE_LSHIFT] or keystate[SDL_SCANCODE_RSHIFT])){
-   movy = 0.15;
+   movy = 0.90;
    posy += 0.90;  
   }
   if(keystate[SDL_SCANCODE_1]){
@@ -922,11 +921,12 @@ int main(){
    miniactual = 7;
   }
   
-  if(fly == 0){
-	caida += CUBE_SIZE*GRAVEDAD;}
-  else{
-	caida += 0;
-	  }
+  #if FLY
+   caida += 0;
+  #else
+   caida += CUBE_SIZE*GRAVEDAD;
+  #endif
+
   movy += caida;
   posy += caida;
 
