@@ -1,9 +1,7 @@
 #ifndef LOAD_H
 #define LOAD_H
 
-#include <stdio.h>
-#include <SDL2/SDL.h>
-#include <GL/gl.h>
+#include "common.h"
 
 typedef void (APIENTRY * glGenFramebuffers_Func)(GLsizei n, GLuint *ids);
 extern glGenFramebuffers_Func glGenFramebuffers;
@@ -29,6 +27,6 @@ extern glFramebufferTexture2D_Func glFramebufferTexture2D;
 typedef void (APIENTRY * glDeleteFramebuffers_Func)(GLsizei n, GLuint *framebuffers);
 extern glDeleteFramebuffers_Func glDeleteFramebuffers;
 
-extern void loadfuncs();
+void loadfuncs();
 
 #endif

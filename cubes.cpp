@@ -1,0 +1,438 @@
+#include "common.h"
+
+Uint16 cubes[1000], id_inv[8] = {1, 2, 3, 4, 5, 6, 26, 0}, miniactual = 0;
+Uint8 inv[8] = {1, 2, 4, 8, 16, 32, 64, 0};
+bool is_selected = false;
+int selected[3];
+
+void farriba(int x, int y, int z, GLuint tex){
+ if(y == 9 or not cubes[z+10*(x+10*(y+1))]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Arriba
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+CUBE_SIZE-0.5
+) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+    }
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void fabajo(int x, int y, int z, GLuint tex){
+ if(y and not cubes[z+10*(x+10*(y-1))]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Abajo
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*(y-1) < -posy-0.5 and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*(y-1) < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+    }
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+     if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+      colision = true;
+      posy -= movy;
+      movy = 0;
+      caida = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void fadelante(int x, int y, int z, GLuint tex){
+ if(z == 9 or not cubes[(z+1)+10*(x+10*y)]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Adelante
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+    }
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void fatras(int x, int y, int z, GLuint tex){
+ if(z == 0 or not cubes[(z-1)+10*(x+10*y)]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Atras
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+    }
+    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posz -= movz;
+      movz = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void fizquierda(int x, int y, int z, GLuint tex){
+ if(x == 0 or not cubes[z+10*((x-1)+10*y)]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Izquierda
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x, CUBE_SIZE*y, CUBE_SIZE*z);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void fderecha(int x, int y, int z, GLuint tex){
+ if(x == 9 or not cubes[z+10*((x+1)+10*y)]){
+  glBindTexture(GL_TEXTURE_2D, tex);
+  glBegin(GL_QUADS); // Derecha
+   if(tex) glTexCoord2f(0, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z+CUBE_SIZE);
+   if(tex) glTexCoord2f(1, 0);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y+CUBE_SIZE, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(1, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z);
+   if(tex) glTexCoord2f(0, 1);
+   glVertex3f(CUBE_SIZE*x+CUBE_SIZE, CUBE_SIZE*y, CUBE_SIZE*z+CUBE_SIZE);
+  glEnd();
+
+  int pr[2];
+  glGetIntegerv(GL_POLYGON_MODE, pr);
+  if(pr[1] == GL_FILL){
+   if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
+    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
+     if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+     if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
+      colision = true;
+      posx -= movx;
+      movx = 0;
+     }
+    }
+   }
+  }
+ }
+}
+
+void create_cube(int z, int x, int y){
+  GLuint tarriba, tabajo, tcostado;
+  tarriba = cubestex[(cubes[z+10*(x+10*y)]-1)*3+1];
+  tabajo = cubestex[(cubes[z+10*(x+10*y)]-1)*3];
+  tcostado = cubestex[(cubes[z+10*(x+10*y)]-1)*3+2];
+ unsigned short z1, z2;
+ glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z1);
+
+ if(is_selected and selected[0] == z and selected[1] == x and selected[2] == y){
+  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   glBindTexture(GL_TEXTURE_2D, 0);
+   glColor3ub(0, 0, 0);
+   farriba(x, y, z, 0);
+   fabajo(x, y, z, 0);
+   fadelante(x, y, z, 0);
+   fatras(x, y, z, 0);
+   fizquierda(x, y, z, 0);
+   fderecha(x, y, z, 0);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+   glColor3ub(255, 255, 255);
+  }
+ }
+
+ farriba(x, y, z, tarriba);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 0;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+ }
+
+ fabajo(x, y, z, tabajo);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 1;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+ }
+
+ fadelante(x, y, z, tcostado);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 2;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+  }
+
+ fatras(x, y, z, tcostado);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 3;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+ }
+
+ fizquierda(x, y, z, tcostado);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 4;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+ }
+
+ fderecha(x, y, z, tcostado);
+ if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+  glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, &z2);
+  if(z1>z2){
+   z1 = z2;
+   selected_face = 5;
+   selected[0] = z;
+   selected[1] = x;
+   selected[2] = y;
+   selbuf = true; }
+ }
+}
+
+void create_mini(GLuint tarriba, GLuint tabajo, GLuint tcostado){
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ glLoadIdentity();
+ glTranslatef(0, 0, -3);
+ glRotatef(30, 1, 0, 0);
+ glRotatef(45, 0, 1, 0);
+
+ glColor3ub(255, 255, 255);
+ glBindTexture(GL_TEXTURE_2D, tarriba); // Arriba
+ glBegin(GL_QUADS);
+  glTexCoord2f(0, 0);
+  glVertex3f(-0.9, 0.9, -0.9);
+  glTexCoord2f(1, 0);
+  glVertex3f(0.9, 0.9, -0.9);
+  glTexCoord2f(1, 1);
+  glVertex3f(0.9, 0.9, 0.9);
+  glTexCoord2f(0, 1);
+  glVertex3f(-0.9, 0.9, 0.9);
+ glEnd();
+ glBindTexture(GL_TEXTURE_2D, tcostado); // Izquierda
+ glBegin(GL_QUADS);
+  glTexCoord2f(0, 0);
+  glVertex3f(-0.9, 0.9, -0.9);
+  glTexCoord2f(1, 0);
+  glVertex3f(-0.9, 0.9, 0.9);
+  glTexCoord2f(1, 1);
+  glVertex3f(-0.9, -0.9, 0.9);
+  glTexCoord2f(0, 1);
+  glVertex3f(-0.9, -0.9, -0.9);
+ glEnd();
+ glColor3ub(200, 200, 200);
+ glBindTexture(GL_TEXTURE_2D, tcostado); // Adelante
+ glBegin(GL_QUADS);
+  glTexCoord2f(0, 0);
+  glVertex3f(-0.9, 0.9, 0.9);
+  glTexCoord2f(1, 0);
+  glVertex3f(0.9, 0.9, 0.9);
+  glTexCoord2f(1, 1);
+  glVertex3f(0.9, -0.9, 0.9);
+  glTexCoord2f(0, 1);
+  glVertex3f(-0.9, -0.9, 0.9);
+ glEnd();
+}
