@@ -111,6 +111,7 @@ void update(){
   selected_face = data[0]-selected[1]*6;
   is_selected = true;
  }
+ else{ is_selected = false; }
 
  glColor3ub(255, 255, 255);
  glClearColor(0.3, 0.7, 0.9, 0);
