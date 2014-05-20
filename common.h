@@ -19,6 +19,7 @@
 #define WIN_H 400
 #define CUBE_SIZE 7
 #define GRAVEDAD 0.05
+#define FPS 30
 #define FLY 0
 
 #endif

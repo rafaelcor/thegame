@@ -7,6 +7,7 @@ int main(){
  const Uint8 *keystate;
 
  loop:
+  int time = SDL_GetTicks();
   colision = false;
   SDL_PumpEvents();
   while(SDL_PollEvent(&event)){
@@ -115,6 +116,9 @@ int main(){
 
   SDL_GL_SwapWindow(window);
   SDL_RenderPresent(sdlRenderer);
+  int wait;
+  int ftime = SDL_GetTicks()-time;
+  if((wait = 1000/FPS-ftime) >= 0) SDL_Delay(wait);
  goto loop;
  return 0;
 }
