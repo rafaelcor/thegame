@@ -96,7 +96,9 @@ void update(){
  for(int x = 0 ; x<10 ; x++){
   for(int y = 0 ; y<10 ; y++){
    for(int z = 0 ; z<10 ; z++){
-    if(cubes[z+10*(x+10*y)]){ create_plain(z, x, y); }
+    if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
+     if(cubes[z+10*(x+10*y)]){ create_plain(z, x, y); }
+    }
    }
   }
  }

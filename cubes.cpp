@@ -21,7 +21,7 @@ void farriba(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*y+CUBE_SIZE > -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE < -posy+CUBE_SIZE-0.5
 ) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
@@ -73,7 +73,7 @@ void fabajo(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*(y-1) < -posy-0.5 and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*(y-1) < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*(y-1)+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
      if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
@@ -124,7 +124,7 @@ void fadelante(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*z+CUBE_SIZE > -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
      if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
@@ -171,7 +171,7 @@ void fatras(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
     if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
      if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
@@ -218,7 +218,7 @@ void fizquierda(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*x > posx-2.4 and CUBE_SIZE*x < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
      if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
@@ -265,7 +265,7 @@ void fderecha(int x, int y, int z, GLuint tex){
 
   int pr[2];
   glGetIntegerv(GL_POLYGON_MODE, pr);
-  if(tex and pr[1] == GL_FILL){
+  if((not tex) and pr[1] == GL_FILL){
    if((CUBE_SIZE*x+CUBE_SIZE > posx-2.4 and CUBE_SIZE*x+CUBE_SIZE < posx+2.4) or (CUBE_SIZE*x < posx-2.4 and CUBE_SIZE*x+CUBE_SIZE > posx-2.4) or (CUBE_SIZE*x < posx+2.4 and CUBE_SIZE*x+CUBE_SIZE > posx+2.4)){
     if((CUBE_SIZE*z > -posz-1.4 and CUBE_SIZE*z < -posz+1.4) or (CUBE_SIZE*z < -posz-1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz-1.4) or (CUBE_SIZE*z < -posz+1.4 and CUBE_SIZE*z+CUBE_SIZE > -posz+1.4)){
      if((CUBE_SIZE*y > -posy-0.5 and CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5)) or (CUBE_SIZE*y < -posy-0.5 and CUBE_SIZE*y+CUBE_SIZE > -posy-0.5) or (CUBE_SIZE*y < -posy+(CUBE_SIZE-0.5) and CUBE_SIZE*y+CUBE_SIZE > -posy+(CUBE_SIZE-0.5))){
@@ -303,19 +303,17 @@ void create_cube(int z, int x, int y){
  tcostado = cubestex[(cubes[z+10*(x+10*y)]-1)*3+2];
 
  if(is_selected and selected[0] == z and selected[1] == x and selected[2] == y){
-  if(z >= -posz/CUBE_SIZE-6 and z <= -posz/CUBE_SIZE+6 and x >= posx/CUBE_SIZE-6 and x <= posx/CUBE_SIZE+6 and y >= -posy/CUBE_SIZE-6 and y <= -posy/CUBE_SIZE+6){
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   glBindTexture(GL_TEXTURE_2D, 0);
-   glColor3ub(0, 0, 0);
-   farriba(x, y, z, 0);
-   fabajo(x, y, z, 0);
-   fadelante(x, y, z, 0);
-   fatras(x, y, z, 0);
-   fizquierda(x, y, z, 0);
-   fderecha(x, y, z, 0);
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glColor3ub(255, 255, 255);
-  }
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glColor3ub(0, 0, 0);
+  farriba(x, y, z, 0);
+  fabajo(x, y, z, 0);
+  fadelante(x, y, z, 0);
+  fatras(x, y, z, 0);
+  fizquierda(x, y, z, 0);
+  fderecha(x, y, z, 0);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glColor3ub(255, 255, 255);
  }
 
  farriba(x, y, z, tarriba);
