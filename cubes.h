@@ -15,6 +15,7 @@ void fatras(int, int, int, GLuint);
 void fizquierda(int, int, int, GLuint);
 void fderecha(int, int, int, GLuint);
 void create_cube(int, int, int);
+void create_plain(int, int, int);
 void create_mini(GLuint, GLuint, GLuint);
 
 #endif

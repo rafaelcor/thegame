@@ -99,21 +99,17 @@ int main(){
   movy += caida;
   posy += caida;
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
   glRotatef(angy, 0, 1, 0);
   glRotatef(angxz, cos(rad), 0, sin(rad));
-  glTranslatef(-posx, posy-(CUBE_SIZE+CUBE_SIZE/2.0), posz);
-  glColor3ub(255, 255, 255);
+  glTranslatef(-posx, posy-(CUBE_SIZE*1.5), posz);
   update();
 
   if(colision){
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glLoadIdentity();
    glRotatef(angy, 0, 1, 0);
    glRotatef(angxz, cos(rad), 0, sin(rad));
-   glTranslatef(-posx, posy-(CUBE_SIZE+CUBE_SIZE/2.0), posz);
-   glColor3ub(255, 255, 255);
+   glTranslatef(-posx, posy-(CUBE_SIZE*1.5), posz);
    update();
   }
 

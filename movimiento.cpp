@@ -1,6 +1,7 @@
 #include "movimiento.h"
+#include "common.h"
 
-float posz = -10, posx = 0, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;
+float posz = -(CUBE_SIZE*5), posx = CUBE_SIZE*5, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;
 bool colision, move = false;
 short angxz = 0, angy = 0;
 float rad, sx = 0, sz = -1;

@@ -1,10 +1,10 @@
 #include "common.h"
+#include "movimiento.h"
 
 SDL_Window *window;
 SDL_Renderer *sdlRenderer;
 Uint8 selected_face; // Arriba-Abajo-Adelante-Atras-Izquierda-Derecha
 GLuint cubestex[26*3], puntero, mini[26], fboId, nums[10], nums_r[10];
-bool selbuf;
 TTF_Font *minifont;
 
 void glEnable2D(){
@@ -90,7 +90,32 @@ void update_y(Uint8 x){
 }
 
 void update(){
- selbuf = false;
+ glClearColor(1, 0, 0, 1);
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+ for(int x = 0 ; x<10 ; x++){
+  for(int y = 0 ; y<10 ; y++){
+   for(int z = 0 ; z<10 ; z++){
+    if(cubes[z+10*(x+10*y)]){ create_plain(z, x, y); }
+   }
+  }
+ }
+ glFlush();
+ glFinish();
+ unsigned char data[3] = {0, 0, 0};
+ glReadPixels(WIN_W/2, WIN_H/2, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+ if(data[0] != 255){
+  selected[0] = data[2];
+  selected[1] = data[0]/6;
+  selected[2] = data[1];
+  selected_face = data[0]-selected[1]*6;
+  is_selected = true;
+ }
+
+ glColor3ub(255, 255, 255);
+ glClearColor(0.3, 0.7, 0.9, 0);
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
  for(int x = 0 ; x<10 and x<(int)posx/CUBE_SIZE ; x++){
   update_y(x);
  }
@@ -100,7 +125,6 @@ void update(){
  if((int)posx/CUBE_SIZE>=0 and (int)posx/CUBE_SIZE<10){
   update_y(posx/CUBE_SIZE);
  }
- is_selected = selbuf;
 
  glEnable2D();
  glBindTexture(GL_TEXTURE_2D, puntero);

@@ -30,8 +30,6 @@ void init(){
  SDL_SetRenderDrawColor(sdlRenderer, 255, 255, 255, 255);
 
  loadfuncs();
-
- glClearColor(0.3, 0.7, 0.9, 0);
  
  glEnable(GL_DEPTH_TEST);
  glEnable(GL_DEPTH);
