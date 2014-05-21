@@ -17,5 +17,7 @@ void fderecha(int, int, int, GLuint);
 void create_cube(int, int, int);
 void create_plain(int, int, int);
 void create_mini(GLuint, GLuint, GLuint);
+void take_cube();
+void put_cube();
 
 #endif

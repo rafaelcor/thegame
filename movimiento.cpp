@@ -1,4 +1,3 @@
-#include "movimiento.h"
 #include "common.h"
 
 float posz = -(CUBE_SIZE*5), posx = CUBE_SIZE*5, posy = -10, movx = 0, movy = 0, movz = 0, caida = 0;

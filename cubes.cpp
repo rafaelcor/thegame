@@ -382,3 +382,46 @@ void create_mini(GLuint tarriba, GLuint tabajo, GLuint tcostado){
   glVertex3f(-0.9, -0.9, 0.9);
  glEnd();
 }
+
+void take_cube(){
+ for(int x = 0 ; x<8 ; x++){
+  if(id_inv[x] == cubes[selected[0]+10*(selected[1]+10*selected[2])] and inv[x] < 64){
+   inv[x]++;
+   cubes[selected[0]+10*(selected[1]+10*selected[2])] = 0;
+   return;
+  }
+ }
+ for(int x = 0 ; x<8 ; x++){
+  if(!id_inv[x]){
+   id_inv[x] = cubes[selected[0]+10*(selected[1]+10*selected[2])];
+   inv[x]++;
+   cubes[selected[0]+10*(selected[1]+10*selected[2])] = 0;
+   return;
+  }
+ }
+}
+
+void put_cube(){
+ switch(selected_face){
+  case 0: // Arriba
+   cubes[selected[0]+10*(selected[1]+10*(selected[2]+1))] = id_inv[miniactual];
+   break;
+  case 1: // Abajo
+   cubes[selected[0]+10*(selected[1]+10*(selected[2]-1))] = id_inv[miniactual];
+   break;
+  case 2: // Adelante
+   cubes[(selected[0]+1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
+   break;
+  case 3: // Atras
+   cubes[(selected[0]-1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
+   break;
+  case 4: // Izquierda
+   cubes[selected[0]+10*((selected[1]-1)+10*selected[2])] = id_inv[miniactual];
+   break;
+  case 5: // Derecha
+   cubes[selected[0]+10*((selected[1]+1)+10*selected[2])] = id_inv[miniactual];
+   break;
+ }
+ inv[miniactual]--;
+ if(!inv[miniactual]){ id_inv[miniactual] = 0; }
+}

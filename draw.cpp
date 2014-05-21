@@ -1,5 +1,4 @@
 #include "common.h"
-#include "movimiento.h"
 
 SDL_Window *window;
 SDL_Renderer *sdlRenderer;

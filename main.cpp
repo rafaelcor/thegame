@@ -23,34 +23,11 @@ int main(){
     sz += (event.motion.xrel/((float) 100))*sin(rad); }
    if(event.type == SDL_MOUSEBUTTONUP){
     if(not move and is_selected){
-     if(event.button.button == SDL_BUTTON_RIGHT and (!id_inv[miniactual] or (id_inv[miniactual] == cubes[selected[0]+10*(selected[1]+10*selected[2])] and inv[miniactual] < 64))){
-      id_inv[miniactual] = cubes[selected[0]+10*(selected[1]+10*selected[2])];
-      inv[miniactual]++;
-      cubes[selected[0]+10*(selected[1]+10*selected[2])] = 0;
+     if(event.button.button == SDL_BUTTON_RIGHT){
+      take_cube();
      }
      if(event.button.button == SDL_BUTTON_LEFT and id_inv[miniactual]){
-      switch(selected_face){
-       case 0: // Arriba
-        cubes[selected[0]+10*(selected[1]+10*(selected[2]+1))] = id_inv[miniactual];
-        break;
-       case 1: // Abajo
-        cubes[selected[0]+10*(selected[1]+10*(selected[2]-1))] = id_inv[miniactual];
-        break;
-       case 2: // Adelante
-        cubes[(selected[0]+1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
-        break;
-       case 3: // Atras
-        cubes[(selected[0]-1)+10*(selected[1]+10*selected[2])] = id_inv[miniactual];
-        break;
-       case 4: // Izquierda
-        cubes[selected[0]+10*((selected[1]-1)+10*selected[2])] = id_inv[miniactual];
-        break;
-       case 5: // Derecha
-        cubes[selected[0]+10*((selected[1]+1)+10*selected[2])] = id_inv[miniactual];
-        break;
-      }
-      inv[miniactual]--;
-      if(!inv[miniactual]){ id_inv[miniactual] = 0; }
+      put_cube();
      }
     }
     else if(move){
