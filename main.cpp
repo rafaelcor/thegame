@@ -6,7 +6,7 @@ int main(){
  SDL_Event event;
  const Uint8 *keystate;
 
- loop:
+ for(;;){
   int time = SDL_GetTicks();
   colision = false;
   SDL_PumpEvents();
@@ -96,6 +96,6 @@ int main(){
   int wait;
   int ftime = SDL_GetTicks()-time;
   if((wait = 1000/FPS-ftime) >= 0) SDL_Delay(wait);
- goto loop;
+ }
  return 0;
 }
